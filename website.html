@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JunkYardMechs — Salvage Warfare for Meta Quest</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Anton&family=Share+Tech+Mono&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
+
+  :root{
+    --gunmetal: #0D0F0B;
+    --panel: #181712;
+    --panel-2: #211f17;
+    --scrap: #5C5F4F;
+    --scrap-dim: #34362c;
+    --acid: #D9FF3D;
+    --hazard: #FF5A1F;
+    --bone: #EDE8D8;
+    --bone-dim: #B9B5A2;
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+  body{
+    background:var(--gunmetal);
+    color:var(--bone);
+    font-family:'IBM Plex Sans', sans-serif;
+    overflow-x:hidden;
+    background-image:
+      radial-gradient(ellipse 800px 500px at 15% -5%, rgba(217,255,61,0.05), transparent),
+      radial-gradient(ellipse 700px 500px at 90% 30%, rgba(255,90,31,0.04), transparent);
+  }
+
+  h1,h2,h3{ font-family:'Anton', sans-serif; text-transform:uppercase; letter-spacing:0.02em; line-height:0.95; }
+  .mono{ font-family:'Share Tech Mono', monospace; letter-spacing:0.08em; text-transform:uppercase; }
+
+  a{ color:inherit; text-decoration:none; }
+  .wrap{ max-width:1180px; margin:0 auto; padding:0 28px; }
+
+  /* ---------- NAV ---------- */
+  nav{
+    position:fixed; top:0; left:0; right:0; z-index:50;
+    background:rgba(13,15,11,0.88);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--scrap-dim);
+  }
+  nav .wrap{ display:flex; align-items:center; justify-content:space-between; height:64px; }
+  .brand{ font-family:'Anton'; font-size:22px; letter-spacing:0.03em; color:var(--bone); display:flex; align-items:center; gap:8px;}
+  .brand .dot{ color:var(--acid); }
+  .navlinks{ display:flex; gap:28px; }
+  .navlinks a{ font-family:'Share Tech Mono'; font-size:12px; letter-spacing:0.12em; text-transform:uppercase; color:var(--bone-dim); transition:color .15s; }
+  .navlinks a:hover{ color:var(--acid); }
+  .nav-cta{
+    font-family:'Share Tech Mono'; font-size:12px; letter-spacing:0.1em; text-transform:uppercase;
+    background:var(--acid); color:#0D0F0B; padding:9px 16px; border-radius:2px; font-weight:700;
+  }
+  @media (max-width:760px){ .navlinks{ display:none; } }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative; min-height:100vh; display:flex; flex-direction:column; justify-content:center;
+    padding-top:64px; overflow:hidden;
+  }
+  .scanlines{
+    position:absolute; inset:0; pointer-events:none; opacity:0.5;
+    background:repeating-linear-gradient(to bottom, rgba(255,255,255,0.025) 0px, rgba(255,255,255,0.025) 1px, transparent 2px, transparent 4px);
+  }
+  .grime{
+    position:absolute; inset:0; pointer-events:none;
+    background:
+      radial-gradient(circle at 20% 80%, rgba(0,0,0,0.55), transparent 45%),
+      radial-gradient(circle at 85% 15%, rgba(0,0,0,0.5), transparent 40%);
+  }
+  .hero-inner{ position:relative; z-index:2; }
+  .eyebrow{
+    font-family:'Share Tech Mono'; font-size:13px; letter-spacing:0.25em; color:var(--acid);
+    display:flex; align-items:center; gap:10px; margin-bottom:18px;
+  }
+  .eyebrow .blip{ width:7px; height:7px; background:var(--acid); border-radius:50%; box-shadow:0 0 8px var(--acid); animation:blip 1.6s infinite; }
+  @keyframes blip{ 0%,100%{opacity:1;} 50%{opacity:0.25;} }
+
+  .hero h1{ font-size:clamp(58px, 11vw, 138px); color:var(--bone); }
+  .hero h1 .hl{ color:var(--acid); text-shadow:0 0 28px rgba(217,255,61,0.45); }
+  .hero-sub{
+    max-width:560px; font-size:18px; line-height:1.55; color:var(--bone-dim); margin-top:22px;
+  }
+  .hero-cta{ display:flex; gap:16px; margin-top:34px; flex-wrap:wrap; }
+  .btn-primary, .btn-ghost{
+    font-family:'Share Tech Mono'; font-size:13px; letter-spacing:0.1em; text-transform:uppercase;
+    padding:14px 26px; border-radius:2px; display:inline-flex; align-items:center; gap:10px; transition:transform .15s, box-shadow .15s;
+  }
+  .btn-primary{ background:var(--acid); color:#0D0F0B; font-weight:700; }
+  .btn-primary:hover{ transform:translateY(-2px); box-shadow:0 8px 20px rgba(217,255,61,0.25); }
+  .btn-ghost{ border:1px solid var(--scrap); color:var(--bone); }
+  .btn-ghost:hover{ border-color:var(--acid); color:var(--acid); }
+
+  .hud-corner{
+    position:absolute; right:28px; bottom:36px; z-index:2; text-align:right;
+    font-family:'Share Tech Mono'; font-size:12px; color:var(--bone-dim); letter-spacing:0.1em;
+    display:none;
+  }
+  @media (min-width:900px){ .hud-corner{ display:block; } }
+  .hud-corner .row{ margin-bottom:4px; }
+  .hud-corner .v{ color:var(--acid); }
+
+  /* ---------- HAZARD DIVIDER ---------- */
+  .hazard{
+    height:16px;
+    background:repeating-linear-gradient(135deg, var(--hazard) 0 18px, #15140f 18px 36px);
+    transform:rotate(-0.6deg) scale(1.02);
+    box-shadow:0 0 22px rgba(0,0,0,0.6);
+    margin:0 -10px;
+  }
+
+  /* ---------- SECTION SHELL ---------- */
+  section{ padding:110px 0; position:relative; }
+  .tag{
+    font-family:'Share Tech Mono'; font-size:12px; letter-spacing:0.2em; color:var(--hazard);
+    border:1px solid var(--hazard); display:inline-block; padding:4px 10px; transform:rotate(-1.5deg);
+    margin-bottom:18px;
+  }
+  .section-title{ font-size:clamp(34px,5vw,56px); margin-bottom:18px; }
+  .section-lead{ color:var(--bone-dim); max-width:620px; font-size:16px; line-height:1.6; margin-bottom:56px; }
+
+  .reveal{ opacity:0; transform:translateY(24px); transition:opacity .6s ease, transform .6s ease; }
+  .reveal.in-view{ opacity:1; transform:translateY(0); }
+
+  /* ---------- PITCH / REQUISITION CARDS ---------- */
+  .req-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:2px; background:var(--scrap-dim); }
+  @media (max-width:860px){ .req-grid{ grid-template-columns:1fr; } }
+  .req-card{
+    background:var(--panel); padding:34px 28px; position:relative;
+  }
+  .req-card .num{ font-family:'Share Tech Mono'; font-size:12px; color:var(--scrap); margin-bottom:22px; }
+  .req-card h3{ font-size:26px; color:var(--bone); margin-bottom:14px; }
+  .req-card p{ color:var(--bone-dim); font-size:15px; line-height:1.6; }
+  .req-card .stamp{
+    position:absolute; top:24px; right:22px; font-family:'Share Tech Mono'; font-size:10px;
+    color:var(--acid); border:1px solid var(--acid); padding:3px 7px; transform:rotate(8deg); letter-spacing:0.1em;
+    opacity:0.85;
+  }
+
+  /* ---------- POD GRIDS (lobby / squad) ---------- */
+  .pod-grid{ display:flex; flex-wrap:wrap; gap:16px; margin-top:8px; }
+  .pod{
+    width:74px; height:74px; border-radius:50%; border:2px solid var(--scrap);
+    display:flex; align-items:center; justify-content:center; font-family:'Share Tech Mono'; font-size:11px;
+    color:var(--bone-dim); position:relative; background:var(--panel-2);
+  }
+  .pod.fill{ border-color:var(--acid); color:var(--acid); box-shadow:0 0 16px rgba(217,255,61,0.25); }
+  .pod.fill-hazard{ border-color:var(--hazard); color:var(--hazard); box-shadow:0 0 16px rgba(255,90,31,0.25); }
+  .pod.empty::after{ content:''; width:18px; height:1px; background:var(--scrap); position:absolute; }
+
+  .two-col{ display:grid; grid-template-columns:1.1fr 1fr; gap:60px; align-items:start; }
+  @media (max-width:860px){ .two-col{ grid-template-columns:1fr; gap:36px; } }
+
+  .specs{ font-family:'Share Tech Mono'; font-size:13px; color:var(--bone-dim); border-top:1px solid var(--scrap-dim); margin-top:30px; }
+  .specs .line{ display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--scrap-dim); }
+  .specs .line span:first-child{ color:var(--scrap); }
+  .specs .line span:last-child{ color:var(--bone); }
+
+  /* ---------- BUILD SECTION ---------- */
+  .build-frame{
+    border:1px solid var(--scrap-dim); background:var(--panel); padding:40px; position:relative;
+  }
+  .chip-row{ display:flex; gap:10px; flex-wrap:wrap; margin-top:20px; }
+  .chip{
+    font-family:'Share Tech Mono'; font-size:11px; letter-spacing:0.08em; text-transform:uppercase;
+    border:1px solid var(--scrap); color:var(--bone-dim); padding:7px 13px; border-radius:20px;
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer{ background:var(--panel); border-top:1px solid var(--scrap-dim); padding:70px 0 36px; }
+  .foot-cta h2{ font-size:clamp(32px,6vw,64px); margin-bottom:18px; max-width:780px; }
+  .foot-bottom{ display:flex; justify-content:space-between; align-items:center; margin-top:60px; flex-wrap:wrap; gap:16px; }
+  .foot-bottom .mono{ font-size:11px; color:var(--scrap); }
+  .platform-badge{ display:flex; align-items:center; gap:10px; font-family:'Share Tech Mono'; font-size:12px; color:var(--bone-dim); }
+  .platform-badge .pip{ width:8px; height:8px; background:var(--acid); border-radius:50%; }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation:none !important; transition:none !important; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="brand">JYM<span class="dot">_</span></div>
+    <div class="navlinks">
+      <a href="#pitch">The Pitch</a>
+      <a href="#yard">The Yard</a>
+      <a href="#drop">The Drop</a>
+      <a href="#build">Build</a>
+      <a href="privacy.html">Privacy</a>
+    </div>
+    <a class="nav-cta" href="#wishlist">Wishlist</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="scanlines"></div>
+  <div class="grime"></div>
+  <div class="wrap hero-inner">
+    <div class="eyebrow"><span class="blip"></span>CO-OP &middot; ARM-SWING &middot; META QUEST</div>
+    <h1>JUNKYARD<br><span class="hl">MECHS</span></h1>
+    <p class="hero-sub">Weld a war machine out of scrap, sling it across the battlefield with your own two arms, and drag four friends into the biggest fight the junkyard's ever seen.</p>
+    <div class="hero-cta">
+      <a class="btn-primary" href="#wishlist">Wishlist on Quest</a>
+      <a class="btn-ghost" href="#pitch">See how it plays ↓</a>
+    </div>
+  </div>
+  <div class="hud-corner">
+    <div class="row">LOBBY CAP <span class="v">10 PLAYERS</span></div>
+    <div class="row">SQUAD CAP <span class="v">5 PLAYERS</span></div>
+    <div class="row">LOCOMOTION <span class="v">ARM-SWING</span></div>
+  </div>
+</header>
+
+<div class="hazard"></div>
+
+<section id="pitch">
+  <div class="wrap reveal">
+    <div class="tag">REQUISITION 01</div>
+    <h2 class="section-title">Three Things This Game<br>Is Actually Built On</h2>
+    <p class="section-lead">No single inspiration explains JunkYardMechs. It's a collision of three — and none of them get watered down to fit the others.</p>
+  </div>
+  <div class="wrap">
+    <div class="req-grid reveal">
+      <div class="req-card">
+        <div class="stamp">CERTIFIED</div>
+        <div class="num">// 01</div>
+        <h3>Arm-Swing Locomotion</h3>
+        <p>No teleporting, no smooth-stick gliding. You haul your hull forward by swinging your arms, vault over wreckage, and launch off ledges with your own momentum — the same physical movement Gorilla Tag built its name on, now strapped to forty feet of scrap metal.</p>
+      </div>
+      <div class="req-card">
+        <div class="num">// 02</div>
+        <h3>Large-Scale Combat</h3>
+        <p>Missions don't stay small. Objectives stack, reinforcements drop in mid-fight, and the battlefield fills with mechs, drones, and chaos well beyond what your five-person squad alone could hold the line against — Helldivers-scale stakes, mech-scale collateral damage.</p>
+      </div>
+      <div class="req-card">
+        <div class="num">// 03</div>
+        <h3>Cyberpunk Junkyard</h3>
+        <p>Neon signage bleeds through smog over rust and rebar. Every mech is visibly welded together from salvage, chop-shop wiring, and stolen corpo tech — a world that looks expensive to live in and cheap to die in.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="hazard"></div>
+
+<section id="yard">
+  <div class="wrap">
+    <div class="two-col">
+      <div class="reveal">
+        <div class="tag">REQUISITION 02</div>
+        <h2 class="section-title">The Yard</h2>
+        <p style="color:var(--bone-dim); font-size:16px; line-height:1.6; max-width:480px;">
+          Before any mission, you land in the social lobby — a shared garage where up to ten players wrench on their mechs, swap parts, and size each other up. No menus standing between you and your crew. If your loadout isn't ready, this is where you fix it.
+        </p>
+        <div class="specs">
+          <div class="line"><span>Lobby capacity</span><span>10 players</span></div>
+          <div class="line"><span>Purpose</span><span>Customize / Meet / Idle</span></div>
+          <div class="line"><span>Pressure</span><span>None — deploy when ready</span></div>
+        </div>
+      </div>
+      <div class="reveal">
+        <p class="mono" style="font-size:11px; color:var(--scrap); margin-bottom:14px;">LOBBY OCCUPANCY — LIVE</p>
+        <div class="pod-grid" id="lobbyPods"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="hazard"></div>
+
+<section id="drop">
+  <div class="wrap">
+    <div class="two-col">
+      <div class="reveal" style="order:2;">
+        <p class="mono" style="font-size:11px; color:var(--scrap); margin-bottom:14px;">DEPLOYED SQUAD — LIVE</p>
+        <div class="pod-grid" id="squadPods"></div>
+      </div>
+      <div class="reveal" style="order:1;">
+        <div class="tag">REQUISITION 03</div>
+        <h2 class="section-title">The Drop</h2>
+        <p style="color:var(--bone-dim); font-size:16px; line-height:1.6; max-width:480px;">
+          When the lobby thins out into a mission, only five make the drop. That's your squad — but the fight you're dropping into is built for far more than five mechs can clear alone. Hold ground, call in support, and out-haul whatever the junkyard throws back at you.
+        </p>
+        <div class="specs">
+          <div class="line"><span>Squad capacity</span><span>5 players</span></div>
+          <div class="line"><span>Mission scale</span><span>Helldivers-style large combat</span></div>
+          <div class="line"><span>Reinforcements</span><span>Yes — mid-mission drops</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="hazard"></div>
+
+<section id="build">
+  <div class="wrap reveal">
+    <div class="tag">REQUISITION 04</div>
+    <h2 class="section-title">Build Your Hull</h2>
+    <p class="section-lead">Every part you bolt on in the Yard shows up on the battlefield — armor plating, salvaged weapon arms, paint that's mostly rust and stencil.</p>
+    <div class="build-frame">
+      <p style="font-family:'Share Tech Mono'; font-size:12px; color:var(--bone-dim); letter-spacing:0.05em;">SALVAGE MANIFEST — UNLOCKED COMPONENTS</p>
+      <div class="chip-row">
+        <span class="chip">Scrap-plate armor</span>
+        <span class="chip">Welded arm cannons</span>
+        <span class="chip">Neon chop-shop paint</span>
+        <span class="chip">Stolen corpo plating</span>
+        <span class="chip">Junk-rig thrusters</span>
+        <span class="chip">Stenciled callsigns</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer id="wishlist">
+  <div class="wrap">
+    <div class="foot-cta reveal">
+      <h2>Get In The Yard.</h2>
+      <p style="color:var(--bone-dim); font-size:16px; max-width:540px; margin-bottom:30px;">Wishlist JunkYardMechs and we'll let you know the moment the gate opens.</p>
+      <div class="hero-cta">
+        <a class="btn-primary" href="#">Wishlist on Quest</a>
+        <a class="btn-ghost" href="#">Join the Discord</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <div class="platform-badge"><span class="pip"></span>BUILT FOR META QUEST</div>
+      <div style="display:flex; gap:18px; align-items:center;">
+        <a class="mono" href="privacy.html" style="color:var(--bone-dim);">PRIVACY POLICY</a>
+        <div class="mono">© JUNKYARDMECHS — SALVAGE SOFTWORKS</div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  function buildPods(containerId, total, filled, fillClass){
+    const el = document.getElementById(containerId);
+    for(let i=0;i<total;i++){
+      const pod = document.createElement('div');
+      pod.className = 'pod' + (i < filled ? ' ' + fillClass : ' empty');
+      pod.textContent = i < filled ? ('P' + (i+1)) : '—';
+      el.appendChild(pod);
+    }
+  }
+  buildPods('lobbyPods', 10, 7, 'fill');
+  buildPods('squadPods', 5, 5, 'fill-hazard');
+
+  const observer = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in-view'); });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+</script>
+
+</body>
+</html>
