@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy Policy — JunkYardMechs</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Anton&family=Share+Tech+Mono&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
+
+  :root{
+    --gunmetal: #0D0F0B;
+    --panel: #181712;
+    --panel-2: #211f17;
+    --scrap: #5C5F4F;
+    --scrap-dim: #34362c;
+    --acid: #D9FF3D;
+    --hazard: #FF5A1F;
+    --bone: #EDE8D8;
+    --bone-dim: #B9B5A2;
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  body{
+    background:var(--gunmetal); color:var(--bone); font-family:'IBM Plex Sans', sans-serif;
+    background-image: radial-gradient(ellipse 800px 500px at 15% -5%, rgba(217,255,61,0.05), transparent);
+  }
+  a{ color:inherit; text-decoration:none; }
+  h1,h2{ font-family:'Anton', sans-serif; text-transform:uppercase; letter-spacing:0.02em; line-height:0.98; }
+  .mono{ font-family:'Share Tech Mono', monospace; letter-spacing:0.08em; text-transform:uppercase; }
+
+  nav{
+    position:fixed; top:0; left:0; right:0; z-index:50;
+    background:rgba(13,15,11,0.92); backdrop-filter:blur(6px); border-bottom:1px solid var(--scrap-dim);
+  }
+  nav .wrap{ display:flex; align-items:center; justify-content:space-between; height:64px; }
+  .brand{ font-family:'Anton'; font-size:22px; color:var(--bone); }
+  .brand .dot{ color:var(--acid); }
+  .navlinks{ display:flex; gap:28px; }
+  .navlinks a{ font-family:'Share Tech Mono'; font-size:12px; letter-spacing:0.12em; text-transform:uppercase; color:var(--bone-dim); transition:color .15s; }
+  .navlinks a:hover{ color:var(--acid); }
+  .navlinks a.active{ color:var(--acid); }
+  @media (max-width:760px){ .navlinks{ display:none; } }
+
+  .wrap{ max-width:880px; margin:0 auto; padding:0 28px; }
+
+  .hazard{
+    height:14px;
+    background:repeating-linear-gradient(135deg, var(--hazard) 0 18px, #15140f 18px 36px);
+    transform:rotate(-0.4deg) scale(1.02); margin:0 -10px;
+  }
+
+  header.policy-head{ padding:150px 0 60px; }
+  .tag{
+    font-family:'Share Tech Mono'; font-size:12px; letter-spacing:0.2em; color:var(--hazard);
+    border:1px solid var(--hazard); display:inline-block; padding:4px 10px; transform:rotate(-1.5deg); margin-bottom:18px;
+  }
+  header.policy-head h1{ font-size:clamp(40px,7vw,72px); margin-bottom:14px; }
+  header.policy-head p{ color:var(--bone-dim); font-size:15px; max-width:560px; }
+  .meta-line{ font-family:'Share Tech Mono'; font-size:11px; color:var(--scrap); margin-top:18px; }
+
+  main{ padding:50px 0 120px; }
+  .policy-section{ margin-bottom:54px; }
+  .policy-section h2{
+    font-size:26px; color:var(--bone); margin-bottom:18px; display:flex; align-items:baseline; gap:12px;
+  }
+  .policy-section h2 .idx{ font-family:'Share Tech Mono'; font-size:14px; color:var(--scrap); }
+  .policy-section p{ color:var(--bone-dim); font-size:15.5px; line-height:1.7; margin-bottom:14px; }
+  .policy-section p strong{ color:var(--bone); }
+
+  .data-table{ border:1px solid var(--scrap-dim); margin:22px 0; }
+  .data-row{ display:grid; grid-template-columns:200px 1fr; border-bottom:1px solid var(--scrap-dim); }
+  .data-row:last-child{ border-bottom:none; }
+  .data-row .label{
+    font-family:'Share Tech Mono'; font-size:11px; letter-spacing:0.06em; text-transform:uppercase;
+    color:var(--acid); padding:16px 18px; background:var(--panel); border-right:1px solid var(--scrap-dim);
+  }
+  .data-row .val{ padding:16px 18px; font-size:14.5px; color:var(--bone-dim); line-height:1.6; background:var(--panel-2); }
+  @media (max-width:640px){
+    .data-row{ grid-template-columns:1fr; }
+    .data-row .label{ border-right:none; border-bottom:1px solid var(--scrap-dim); }
+  }
+
+  .use-list{ list-style:none; margin:18px 0; }
+  .use-list li{
+    position:relative; padding-left:24px; margin-bottom:10px; color:var(--bone-dim); font-size:15px; line-height:1.6;
+  }
+  .use-list li::before{ content:'▸'; position:absolute; left:0; color:var(--acid); }
+
+  .contact-box{
+    border:1px solid var(--acid); background:rgba(217,255,61,0.04); padding:26px 28px; margin-top:16px;
+  }
+  .contact-box .mono{ font-size:11px; color:var(--scrap); display:block; margin-bottom:8px; }
+  .contact-box a.email{ font-family:'Share Tech Mono'; font-size:16px; color:var(--acid); }
+
+  .toc{ display:flex; flex-wrap:wrap; gap:10px; margin-bottom:46px; }
+  .toc a{
+    font-family:'Share Tech Mono'; font-size:11px; letter-spacing:0.06em; text-transform:uppercase;
+    border:1px solid var(--scrap); color:var(--bone-dim); padding:8px 14px; border-radius:20px; transition:border-color .15s, color .15s;
+  }
+  .toc a:hover{ border-color:var(--acid); color:var(--acid); }
+
+  footer{ border-top:1px solid var(--scrap-dim); padding:36px 0; }
+  footer .wrap{ display:flex; justify-content:space-between; flex-wrap:wrap; gap:14px; }
+  footer .mono{ font-size:11px; color:var(--scrap); }
+  footer a.back{ font-family:'Share Tech Mono'; font-size:12px; color:var(--bone-dim); }
+  footer a.back:hover{ color:var(--acid); }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="brand">JYM<span class="dot">_</span></div>
+    <div class="navlinks">
+      <a href="junkyardmechs.html#pitch">The Pitch</a>
+      <a href="junkyardmechs.html#yard">The Yard</a>
+      <a href="junkyardmechs.html#drop">The Drop</a>
+      <a href="junkyardmechs.html#build">Build</a>
+      <a href="privacy.html" class="active">Privacy</a>
+    </div>
+    <a class="nav-cta" style="font-family:'Share Tech Mono'; font-size:12px; letter-spacing:0.1em; text-transform:uppercase; background:var(--acid); color:#0D0F0B; padding:9px 16px; border-radius:2px; font-weight:700;" href="junkyardmechs.html#wishlist">Wishlist</a>
+    </div>
+</nav>
+
+<div class="hazard" style="margin-top:64px;"></div>
+
+<header class="policy-head">
+  <div class="wrap">
+    <div class="tag">DATA MANIFEST</div>
+    <h1>Privacy Policy</h1>
+    <p>How JunkYardMechs handles player data across the Meta platform, PlayFab, and Photon — what's collected, why, and how to get it deleted.</p>
+    <div class="meta-line">LAST UPDATED — JUNE 2026 // APPLIES TO META QUEST BUILD</div>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+
+    <div class="toc">
+      <a href="#collect">Data We Collect</a>
+      <a href="#use">How We Use It</a>
+      <a href="#deletion">Deletion &amp; Account Removal</a>
+      <a href="#third-party">Third-Party Services</a>
+      <a href="#profile">User Profile</a>
+      <a href="#children">Children's Privacy</a>
+    </div>
+
+    <section class="policy-section" id="collect">
+      <h2><span class="idx">01</span>Information We Collect</h2>
+      <p>This app collects and processes limited user data provided by the Meta platform and the third-party services used to operate the game. <strong>No real-world personal information — real name, email address, or physical address — is collected by the app itself.</strong></p>
+
+      <div class="data-table">
+        <div class="data-row">
+          <div class="label">User ID</div>
+          <div class="val">Provided by the Meta platform. Used to uniquely identify players for account functionality, multiplayer features, and entitlement validation.</div>
+        </div>
+        <div class="data-row">
+          <div class="label">Age Group</div>
+          <div class="val">Provided by the Meta platform. Used to determine age-appropriate access to features and to comply with platform safety requirements. The app does not collect exact age or date of birth.</div>
+        </div>
+        <div class="data-row">
+          <div class="label">PlayFab Player Data</div>
+          <div class="val">Tracks player progression, statistics, and account-related game data.</div>
+        </div>
+        <div class="data-row">
+          <div class="label">Photon Networking Data</div>
+          <div class="val">Session and connection data required to provide real-time multiplayer server connectivity.</div>
+        </div>
+        <div class="data-row">
+          <div class="label">Purchase &amp; Entitlement Data</div>
+          <div class="val">Used to verify purchases, unlock downloadable content, and restore previously purchased items.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="policy-section" id="use">
+      <h2><span class="idx">02</span>How We Use the Data</h2>
+      <p>The collected data is used only to:</p>
+      <ul class="use-list">
+        <li>Enable core gameplay features</li>
+        <li>Support multiplayer and online services</li>
+        <li>Save player progress and game statistics</li>
+        <li>Validate in-app purchases and downloadable content</li>
+        <li>Enforce age-appropriate access to features</li>
+        <li>Comply with Meta platform policies</li>
+      </ul>
+      <p><strong>User data is not sold, shared for advertising, or used for tracking outside of gameplay functionality.</strong></p>
+    </section>
+
+    <section class="policy-section" id="deletion">
+      <h2><span class="idx">03</span>Data Deletion &amp; Account Removal</h2>
+      <p>Player data associated with this app is managed through PlayFab.</p>
+      <ul class="use-list">
+        <li>Uninstalling the game stops all further data collection.</li>
+        <li>Stored gameplay data may remain associated with your account unless deletion is requested.</li>
+      </ul>
+      <p>You may request deletion of your stored account data at any time by contacting us. Upon request, all PlayFab account data associated with your user account will be permanently deleted within a reasonable timeframe, except where retention is required by platform policy or law.</p>
+
+      <div class="contact-box">
+        <span class="mono">Data Deletion Contact</span>
+        <a class="email" href="mailto:cadebreaux66@example.com">cadebreaux66@example.com</a>
+      </div>
+    </section>
+
+    <section class="policy-section" id="third-party">
+      <h2><span class="idx">04</span>Third-Party Services</h2>
+      <p>This app uses the following third-party services to operate core functionality. These services only process data necessary to provide gameplay features and do not use the data for advertising purposes.</p>
+      <ul class="use-list">
+        <li><strong>PlayFab</strong> — player accounts, progression, and statistics</li>
+        <li><strong>Photon</strong> — multiplayer server networking</li>
+      </ul>
+    </section>
+
+    <section class="policy-section" id="profile">
+      <h2><span class="idx">05</span>User Profile</h2>
+      <p>Your profile image is used to display your avatar for in-game identity, multiplayer recognition, and social features. The image is only used for identification inside the app and is not sold or used for advertising.</p>
+    </section>
+
+    <section class="policy-section" id="children">
+      <h2><span class="idx">06</span>Children's Privacy</h2>
+      <p>This app relies on Meta's User Age Group classification and does not knowingly collect personal information beyond what is provided by the platform and required for gameplay.</p>
+    </section>
+
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <a class="back" href="junkyardmechs.html">← Back to JunkYardMechs</a>
+    <div class="mono">© JUNKYARDMECHS — SALVAGE SOFTWORKS</div>
+  </div>
+</footer>
+
+</body>
+</html>
